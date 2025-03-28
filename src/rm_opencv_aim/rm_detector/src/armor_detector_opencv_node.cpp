@@ -19,7 +19,7 @@ public:
             2.0,  // light_red_ratio
             2.0,  // light_blue_ratio
             5,    // cy_tol
-            10,   // height_tol
+            1.4,   // height_rate_tol
             7,    // light_angle_tol
             2.1,  // vertical_discretization
             2.7   // height_multiplier
@@ -40,7 +40,7 @@ public:
         this->declare_parameter<float>("light_red_ratio", 2.0);
         this->declare_parameter<float>("light_blue_ratio", 2.0);
         this->declare_parameter<int>("cy_tol", 5);
-        this->declare_parameter<int>("height_tol", 10);
+        this->declare_parameter<float>("height_rate_tol", 1.3);
         this->declare_parameter<int>("light_angle_tol", 7);
         this->declare_parameter<float>("vertical_discretization", 2.1);
         this->declare_parameter<float>("height_multiplier", 2.7);
@@ -131,8 +131,8 @@ private:
                 detector_->update_light_blue_ratio(param.as_double());
             } else if (param.get_name() == "cy_tol") {
                 detector_->update_cy_tol(param.as_int());
-            } else if (param.get_name() == "height_tol") {
-                detector_->update_height_tol(param.as_int());
+            } else if (param.get_name() == "height_rate_tol") {
+                detector_->update_height_rate_tol(param.as_double());
             } else if (param.get_name() == "light_angle_tol") {
                 detector_->update_light_angle_tol(param.as_int());
             } else if (param.get_name() == "vertical_discretization") {

@@ -54,7 +54,7 @@ struct Light_params {
     float light_red_ratio;
     float light_blue_ratio;
     int cy_tol;
-    int height_tol;
+    float height_rate_tol;
     int light_angle_tol;
     float vertical_discretization;
     float height_multiplier;
@@ -83,7 +83,7 @@ public:
     void update_light_red_ratio(float new_light_red_ratio);
     void update_light_blue_ratio(float new_light_blue_ratio);
     void update_cy_tol(int new_cy_tol);
-    void update_height_tol(int new_height_tol);
+    void update_height_rate_tol(float new_height_rate_tol);
     void update_light_angle_tol(int new_light_angle_tol);
     void update_vertical_discretization(float new_vertical_discretization);
     void update_height_multiplier(float new_height_multiplier);

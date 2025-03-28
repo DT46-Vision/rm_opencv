@@ -1,0 +1,10 @@
+/mv_camera:
+  ros__parameters:
+    camera_name: mv_camera # 相机名
+    
+    camera_info_url: package://mindvision_camera/config/camera_info_infantry.yaml
+
+    exposure_time: 200 #  曝光时间
+    analog_gain: 256
+
+    # 改这个配置文件有效

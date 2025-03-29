@@ -57,7 +57,8 @@ struct Light_params {
     float height_rate_tol;
     int light_angle_tol;
     float vertical_discretization;
-    float height_multiplier;
+    float height_multiplier_min;
+    float height_multiplier_max;
 };
 
 class ArmorDetector {
@@ -86,7 +87,8 @@ public:
     void update_height_rate_tol(float new_height_rate_tol);
     void update_light_angle_tol(int new_light_angle_tol);
     void update_vertical_discretization(float new_vertical_discretization);
-    void update_height_multiplier(float new_height_multiplier);
+    void update_height_multiplier_min(float new_height_multiplier_min);
+    void update_height_multiplier_max(float new_height_multiplier_max);
     void update_binary_val(int new_binary_val);
     void update_detect_color(int new_color);
     void update_display_mode(int new_display_mode);

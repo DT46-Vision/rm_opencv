@@ -104,8 +104,12 @@ void ArmorDetector::update_vertical_discretization(float new_vertical_discretiza
     light_params.vertical_discretization = new_vertical_discretization;
 }
 
-void ArmorDetector::update_height_multiplier(float new_height_multiplier) {
-    light_params.height_multiplier = new_height_multiplier;
+void ArmorDetector::update_height_multiplier_min(float new_height_multiplier_min) {
+    light_params.height_multiplier_min = new_height_multiplier_min;
+}
+
+void ArmorDetector::update_height_multiplier_max(float new_height_multiplier_max) {
+    light_params.height_multiplier_max = new_height_multiplier_max;
 }
 
 void ArmorDetector::update_binary_val(int new_binary_val) {
@@ -190,50 +194,52 @@ std::vector<Light> ArmorDetector::find_lights(const cv::Mat& img_binary_input) {
 }
 
 std::pair<int, float> ArmorDetector::is_close(const Light& light1, const Light& light2) {
+    // 计算公共变量
+    float height = std::max(light1.height, light2.height);
+    float height_rate = height / std::min(light1.height, light2.height);
+    float distance = calculate_distance({light1.cx, light1.cy}, {light2.cx, light2.cy});
+
+    // 如果高度比例不符合，直接返回
+    if (height_rate >= light_params.height_rate_tol) {
+        return std::make_pair(-1, -1.0f);
+    }
+
+    // 检查是否在同一水平线上
     if (std::abs(light1.cy - light2.cy) < light_params.cy_tol) {
-        float height = std::max(light1.height, light2.height);
-        float height_rate = height / std::min(light1.height, light2.height);
-        float distance = calculate_distance({light1.cx, light1.cy}, {light2.cx, light2.cy});
-
-        if (height_rate < light_params.height_rate_tol) {
-            if (distance < height * light_params.height_multiplier) {
-                return std::make_pair(0, height);
-            } else if (distance > height * 1.66f && distance < height * 1.86f * light_params.height_multiplier) {
-                return std::make_pair(1, height);
-            }
+        // 水平情况下的距离检查
+        if (distance > height * light_params.height_multiplier_min &&
+         distance < height * light_params.height_multiplier_max) {
+            return std::make_pair(0, height);
+        } else if (distance > height * 1.56f * light_params.height_multiplier_min &&
+         distance < height * 1.76f * light_params.height_multiplier_max) {
+            return std::make_pair(1, height);
         }
-    } 
-    else {
-        float height = std::max(light1.height, light2.height);
-        float height_rate = height / std::min(light1.height, light2.height);
+    } else {
+        // 非水平情况，检查角度和垂直性
+        float angle_diff = std::abs(light1.angle - light2.angle);
+        if (angle_diff <= light_params.light_angle_tol) {
+            float light1_angle = std::atan2(light1.up.y - light1.down.y, light1.up.x - light1.down.x) * 180.0 / M_PI;
+            float light2_angle = std::atan2(light2.up.y - light2.down.y, light2.up.x - light2.down.x) * 180.0 / M_PI;
+            float line_angle = std::atan2(light1.cy - light2.cy, light1.cx - light2.cx) * 180.0 / M_PI;
 
-        if (height_rate < light_params.height_rate_tol) {
-            float angle_diff = std::abs(light1.angle - light2.angle);
-            if (angle_diff <= light_params.light_angle_tol) {
-                float light1_angle = std::atan2(light1.up.y - light1.down.y, light1.up.x - light1.down.x) * 180.0 / M_PI;
-                float light2_angle = std::atan2(light2.up.y - light2.down.y, light2.up.x - light2.down.x) * 180.0 / M_PI;
-                float line_angle = std::atan2(light1.cy - light2.cy, light1.cx - light2.cx) * 180.0 / M_PI;
+            float slope1 = angle_to_slope(light1_angle);
+            float slope2 = angle_to_slope(light2_angle);
+            float slope_line = angle_to_slope(line_angle);
 
-                float slope1 = angle_to_slope(light1_angle);
-                float slope2 = angle_to_slope(light2_angle);
-                float slope_line = angle_to_slope(line_angle);
-
-                if (std::abs(slope1 * slope_line + 1) < light_params.vertical_discretization ||
-                    std::abs(slope2 * slope_line + 1) < light_params.vertical_discretization) {
-                    
-                    float distance = calculate_distance({light1.cx, light1.cy}, {light2.cx, light2.cy});
-
-                    if (distance > height) {
-                        if (distance < height * light_params.height_multiplier) {
-                            return std::make_pair(0, height);
-                        } else if (distance > height * 1.66f && distance < height * 1.86f * light_params.height_multiplier) {
-                            return std::make_pair(1, height);
-                        }
-                    }
+            // 检查垂直性
+            if (std::abs(slope1 * slope_line + 1) < light_params.vertical_discretization ||
+                std::abs(slope2 * slope_line + 1) < light_params.vertical_discretization) {
+                if (distance > height * light_params.height_multiplier_min &&
+                 distance < height * light_params.height_multiplier_max) {
+                    return std::make_pair(0, height);
+                } else if (distance > height * 1.56f * light_params.height_multiplier_min &&
+                 distance < height * 1.76f * light_params.height_multiplier_max) {
+                    return std::make_pair(1, height);
                 }
             }
         }
     }
+
     return std::make_pair(-1, -1.0f);
 }
 
@@ -331,15 +337,15 @@ cv::Mat ArmorDetector::draw_img() {
 
 std::tuple<cv::Mat, cv::Mat> ArmorDetector::display() {
     if (display_mode == 1) {
-        return std::make_tuple(img_binary, cv::Mat());
+        return std::make_tuple(img_binary, cv::Mat(1, 1, CV_8UC1, cv::Scalar(0)));
     } else if (display_mode == 2) {
         img_drawn = draw_img();
         return std::make_tuple(img_binary, img_drawn);
     } else if (display_mode == 0) {
-        return std::make_tuple(cv::Mat(), cv::Mat());
+        return std::make_tuple(cv::Mat(1, 1, CV_8UC1, cv::Scalar(0)), cv::Mat(1, 1, CV_8UC1, cv::Scalar(0)));
     } else {
         std::cerr << "Invalid display mode" << std::endl;
-        return std::make_tuple(cv::Mat(), cv::Mat());
+        return std::make_tuple(cv::Mat(1, 1, CV_8UC1, cv::Scalar(0)), cv::Mat(1, 1, CV_8UC1, cv::Scalar(0)));
     }
 }
 

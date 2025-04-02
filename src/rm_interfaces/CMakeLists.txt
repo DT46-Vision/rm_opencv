@@ -18,6 +18,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ArmorsCppMsg.msg"
   "msg/ArmorCppInfo.msg"
   "msg/SerialReceive.msg"
+  "msg/OdoMsg.msg"
+  "msg/NavigationMsg.msg"
   "msg/Decision.msg"
   DEPENDENCIES std_msgs
 )

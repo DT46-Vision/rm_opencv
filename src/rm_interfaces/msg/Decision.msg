@@ -10,4 +10,4 @@ uint16 remain_time        # 剩余时间 300s
 uint16 remain_bullet      # 剩余子弹
 uint8 match_progress      # 比赛进程 （准备为1,开始为4）
 uint8 occupation          # 事件
-int8 color                # 颜色
+uint8 color          # 颜色

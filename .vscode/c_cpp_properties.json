@@ -1,0 +1,29 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/morefine/ros_ws/install/rm_interfaces/include/**",
+        "/home/morefine/rm2025_hzu_sentry_ws/install/serial/include/**",
+        "/home/morefine/rm2025_hzu_sentry_ws/install/rm_interfaces/include/**",
+        "/home/morefine/rm2025_hzu_sentry_ws/install/openslam_gmapping/include/**",
+        "/home/morefine/rm2025_hzu_sentry_ws/install/dwb_msgs/include/**",
+        "/home/morefine/rm2025_hzu_sentry_ws/install/nav_2d_msgs/include/**",
+        "/home/morefine/rm2025_hzu_sentry_ws/install/nav2_voxel_grid/include/**",
+        "/home/morefine/rm2025_hzu_sentry_ws/install/nav2_msgs/include/**",
+        "/opt/ros/humble/include/**",
+        "/home/morefine/ros_ws/src/rm_opencv_aim/rm_detector/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

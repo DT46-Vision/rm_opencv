@@ -15,3 +15,4 @@
 | R5   | 红方5号 装甲板   | 10   |
 | R7   | 红方哨兵 装甲板   | 11   |
 
+link: https://www.kdocs.cn/l/ch0Cy1WgeQAS?from=docs

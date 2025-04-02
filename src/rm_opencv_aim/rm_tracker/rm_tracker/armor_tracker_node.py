@@ -1,7 +1,7 @@
 import time                             # 用于时间计算
 import rclpy                            # ROS2 Python接口库
 from rclpy.node import Node             # ROS2 节点类
-from std_msgs.msg import String, Header # 字符串消息类型和头部消息类型
+from std_msgs.msg import Header # 字符串消息类型和头部消息类型
 from sensor_msgs.msg import Image       # 图像消息类型
 from rm_interfaces.msg import ArmorsCppMsg, ArmorCppInfo, ArmorTracking, Decision  # 导入自定义消息类型
 from rm_tracker.armor_tracker import select_tracking_armor, pixel_to_angle_and_deep, Armor

@@ -72,6 +72,9 @@ void ArmorDetector::update_light_area_min(int new_light_area_min) {
     light_params.light_area_min = new_light_area_min;
 }
 
+void ArmorDetector::update_light_angle_min(int new_light_angle_min) {
+    light_params.light_angle_min = new_light_angle_min;
+}
 void ArmorDetector::update_light_angle_max(int new_light_angle_max) {
     light_params.light_angle_max = new_light_angle_max;
 }
@@ -90,10 +93,6 @@ void ArmorDetector::update_cy_tol(int new_cy_tol) {
 
 void ArmorDetector::update_height_rate_tol(float new_height_rate_tol) {
     light_params.height_rate_tol = new_height_rate_tol;
-}
-
-void ArmorDetector::update_light_angle_tol(int new_light_angle_tol) {
-    light_params.light_angle_tol = new_light_angle_tol;
 }
 
 void ArmorDetector::update_vertical_discretization(float new_vertical_discretization) {

@@ -55,7 +55,6 @@ struct Light_params {
     float light_blue_ratio;
     int cy_tol;
     float height_rate_tol;
-    int light_angle_tol;
     float vertical_discretization;
     float height_multiplier_min;
     float height_multiplier_max;

@@ -85,7 +85,6 @@ public:
     void update_light_blue_ratio(float new_light_blue_ratio);
     void update_cy_tol(int new_cy_tol);
     void update_height_rate_tol(float new_height_rate_tol);
-    void update_light_angle_tol(int new_light_angle_tol);
     void update_vertical_discretization(float new_vertical_discretization);
     void update_height_multiplier_min(float new_height_multiplier_min);
     void update_height_multiplier_max(float new_height_multiplier_max);

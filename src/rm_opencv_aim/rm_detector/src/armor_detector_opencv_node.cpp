@@ -20,7 +20,6 @@ public:
             2.0,  // light_blue_ratio
             5,    // cy_tol
             1.3,   // height_rate_tol
-            7,    // light_angle_tol
             1.5,  // vertical_discretization
             2.1,   // height_multiplier_min
             2.6   // height_multiplier_max
@@ -42,7 +41,6 @@ public:
         this->declare_parameter<float>("light_blue_ratio", 2.0);
         this->declare_parameter<int>("cy_tol", 5);
         this->declare_parameter<float>("height_rate_tol", 1.2);
-        this->declare_parameter<int>("light_angle_tol", 7);
         this->declare_parameter<float>("vertical_discretization", 1.5);
         this->declare_parameter<float>("height_multiplier_min", 1.8);
         this->declare_parameter<float>("height_multiplier_max", 2.6);
@@ -135,8 +133,6 @@ private:
                 detector_->update_cy_tol(param.as_int());
             } else if (param.get_name() == "height_rate_tol") {
                 detector_->update_height_rate_tol(param.as_double());
-            } else if (param.get_name() == "light_angle_tol") {
-                detector_->update_light_angle_tol(param.as_int());
             } else if (param.get_name() == "vertical_discretization") {
                 detector_->update_vertical_discretization(param.as_double());
             } else if (param.get_name() == "height_multiplier_min") {

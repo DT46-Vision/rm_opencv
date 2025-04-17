@@ -26,19 +26,17 @@ class ArmorTrackerNode(Node):
         self.center_last = (0, 0)   # 默认初始化中心点坐标为(0, 0)
         self.height_last = 0        # 初始化armor高度为0
 
-        self.use_kf = False         # 是否使用卡尔曼滤波
+        self.use_kf = True         # 是否使用卡尔曼滤波
         self.kf_cx = KalmanFilter()
         self.kf_cy = KalmanFilter()
         self.kf_h = KalmanFilter()
 
         self.lost = 0               # 初始化丢失帧数
         self.frame_add = 35         # 初始化补帧数
-        self.reflection_height_tol = 20
-        self.reflection_cx_tol = 10
+        self.track_height_tol = 10
         self.offset_yaw = 0.0
         self.offset_pitch = 0.0
         self.deep_buff = 0.000_001
-        self.yaw_ratio = 1.00
 
         self.pub_tracker = self.create_publisher(ArmorTracking, '/tracker/target', 10) # 创建发布者/tracker/target
 
@@ -50,12 +48,10 @@ class ArmorTrackerNode(Node):
         self.declare_parameter('frame_add', self.frame_add)
         self.declare_parameter('follow_decision', self.follow_decision)
         self.declare_parameter('tracking_color', self.tracking_color)
-        self.declare_parameter('reflection_height_tol', self.reflection_height_tol)
-        self.declare_parameter('reflection_cx_tol', self.reflection_cx_tol)
+        self.declare_parameter('track_height_tol', self.track_height_tol)
         self.declare_parameter('offset_yaw', self.offset_yaw)
         self.declare_parameter('offset_pitch', self.offset_pitch)
         self.declare_parameter('deep_buff', self.deep_buff)
-        self.declare_parameter('yaw_ratio', self.yaw_ratio)
         self.add_on_set_parameters_callback(self.param_callback)
         self.get_logger().info('Armor Tracker Node has started.')
 
@@ -79,9 +75,6 @@ class ArmorTrackerNode(Node):
                 self.offset_pitch = param.value
             if param.name == 'deep_buff':
                 self.deep_buff = param.value
-            if param.name == 'yaw_ratio':
-                self.yaw_ratio = param.value
-
         return SetParametersResult(successful=True)
 
     def listener_callback_cam(self, data):
@@ -101,7 +94,7 @@ class ArmorTrackerNode(Node):
             self.kf_h.dt = dt
 
             # 选择要跟踪的装甲板
-            self.tracking_armor = select_tracking_armor(msg, self.tracking_color, self.reflection_height_tol, self.reflection_cx_tol)
+            self.tracking_armor = select_tracking_armor(msg, self.tracking_color,self.track_height_tol)
 
             # 日志记录
             if self.tracking_color == 0:
@@ -163,7 +156,7 @@ class ArmorTrackerNode(Node):
 
             # 如果有装甲板，使用其 id，否则设为默认值
             tracking_armor_msg.id = self.tracking_armor[0].class_id if self.tracking_armor else 0
-            tracking_armor_msg.yaw = float((yaw + self.offset_yaw) * self.yaw_ratio)
+            tracking_armor_msg.yaw = float(yaw + self.offset_yaw)
             tracking_armor_msg.pitch = float(pitch + self.offset_pitch + buff)
             tracking_armor_msg.deep = float(deep)
 

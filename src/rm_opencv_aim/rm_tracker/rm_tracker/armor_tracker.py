@@ -11,7 +11,7 @@ class Armor:
         self.center = center
         self.height = height
 
-def select_tracking_armor(msg, color, track_height_tol, cx_tol):
+def select_tracking_armor(msg, color, track_height_tol):
     """
     从 ArmorsCppMsg 中选择目标装甲板。
     
@@ -51,18 +51,12 @@ def select_tracking_armor(msg, color, track_height_tol, cx_tol):
     top_two = sorted(filtered_color_data, key=lambda armor: armor.height, reverse=True)[:2]
     height_diff = top_two[0].height - top_two[1].height
 
-    # 高度差超过阈值，返回最高的装甲板
-    if height_diff > track_height_tol:
-        return [top_two[0]]
-
-    # 检查 x 坐标差
-    cx_diff = abs(top_two[0].center[0] - top_two[1].center[0])
-    if cx_diff > cx_tol:
-        # 返回 x 坐标绝对值最小的装甲板
+    # 高度差不多，就返回 x 坐标最小的装甲板
+    if height_diff <= track_height_tol:
         return [top_two[0]] if abs(top_two[0].center[0]) < abs(top_two[1].center[0]) else [top_two[1]]
 
     # 否则，返回 y 坐标最高的装甲板
-    return [top_two[0]] if top_two[0].center[1] > top_two[1].center[1] else [top_two[1]]
+    return [top_two[0]]
 
 def deep_cal(x):
     if x <= 0:

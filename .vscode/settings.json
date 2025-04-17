@@ -40,5 +40,6 @@
         "/home/morefine/rm2025_hzu_sentry_ws/install/nav2_common/local/lib/python3.10/dist-packages",
         "/opt/ros/humble/lib/python3.10/site-packages",
         "/opt/ros/humble/local/lib/python3.10/dist-packages"
-    ]
+    ],
+    "ros.distro": "humble"
 }

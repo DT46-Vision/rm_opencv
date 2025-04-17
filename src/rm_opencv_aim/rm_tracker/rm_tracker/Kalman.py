@@ -42,7 +42,6 @@ class KalmanFilter:
         # 重置协方差矩阵为初始值（较大的不确定性）
         self.kf.errorCovPost = np.eye(2, dtype=np.float32) * 1000
 
-
     def get_state(self):
         # 获取当前状态（yaw）
         return self.kf.statePost[0, 0]  # 仅返回yaw

@@ -9,7 +9,7 @@ class KalmanFilter:
         
         # 状态转移矩阵
         self.kf.transitionMatrix = np.array([[1, self.dt],
-                                              [0, 1]], np.float32)
+                                             [0, 1]], np.float32)
         
         # 观测矩阵
         self.kf.measurementMatrix = np.array([[1, 0]], np.float32)
@@ -22,6 +22,9 @@ class KalmanFilter:
         
         # 初始状态
         self.kf.statePost = np.zeros((2, 1), np.float32)
+        
+        # 初始协方差矩阵（较大的不确定性）
+        self.kf.errorCovPost = np.eye(2, dtype=np.float32) * 1000  # 初始不确定性较大
 
     def predict(self):
         # 进行预测
@@ -32,20 +35,14 @@ class KalmanFilter:
         measurement = np.array([[yaw]], np.float32)
         self.kf.correct(measurement)
 
+    def reset(self):
+        """重置卡尔曼滤波器状态"""
+        # 重置状态向量为零
+        self.kf.statePost = np.zeros((2, 1), np.float32)
+        # 重置协方差矩阵为初始值（较大的不确定性）
+        self.kf.errorCovPost = np.eye(2, dtype=np.float32) * 1000
+
+
     def get_state(self):
         # 获取当前状态（yaw）
         return self.kf.statePost[0, 0]  # 仅返回yaw
-
-# 示例用法
-if __name__ == "__main__":
-    dt = 0.1  # 时间步长（秒）
-    kf = KalmanFilter()
-
-    # 模拟传入的yaw数据
-    measurements = [1.0, 1.2, 1.1]
-
-    for yaw in measurements:
-        kf.predict()  # 进行预测
-        kf.update(yaw)  # 更新状态
-        predicted_yaw = kf.get_state()  # 获取预测的yaw
-        print(f"预测的 yaw: {predicted_yaw:.2f}")

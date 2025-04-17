@@ -120,6 +120,10 @@ class ArmorTrackerNode(Node):
                         self.center_last = (self.kf_cx.get_state(), self.kf_cy.get_state())
                         self.height_last = self.kf_h.get_state()
                     else:
+                        # 重置卡尔曼滤波器状态
+                        self.kf_cx.reset()  
+                        self.kf_cy.reset()
+                        self.kf_h.reset()
                         self.center_last = (0, 0)
                         self.height_last = 0
                 else:

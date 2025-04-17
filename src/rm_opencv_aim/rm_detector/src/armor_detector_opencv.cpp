@@ -192,12 +192,11 @@ std::pair<int, float> ArmorDetector::is_close(const Light& light1, const Light& 
     // 计算公共变量
     float height = std::max(light1.height, light2.height);
     float height_rate = height / std::min(light1.height, light2.height);
-    float distance = calculate_distance({light1.cx, light1.cy}, {light2.cx, light2.cy});
-
     // 如果高度比例不符合，直接返回
     if (height_rate >= light_params.height_rate_tol) {
         return std::make_pair(-1, -1.0f);
     }
+    float distance = calculate_distance({light1.cx, light1.cy}, {light2.cx, light2.cy});
 
     // 检查是否在同一水平线上
     if (std::abs(light1.cy - light2.cy) < light_params.cy_tol) {
@@ -237,9 +236,11 @@ std::pair<int, float> ArmorDetector::is_close(const Light& light1, const Light& 
 std::vector<Armor> ArmorDetector::is_armor(const std::vector<Light>& lights) {
     std::vector<Armor> armors_found;
     std::set<int> processed_indices;
+    
     if (lights.size() < 2) {
         return armors_found;
     }
+
     for (size_t i = 0; i < lights.size() - 2; i++) {
         if (processed_indices.count(i)) continue;
         const Light& light = lights[i];

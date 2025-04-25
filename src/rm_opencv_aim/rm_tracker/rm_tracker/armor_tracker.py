@@ -98,4 +98,3 @@ if __name__ == "__main__":
     if result:
         yaw, pitch, deep = pixel_to_angle_and_deep(result["height"], result["center"], 55, 72)
     
-        logger.info(f"yaw: {yaw:.2f}, pitch: {pitch:.2f}, deep: {deep:.2f}")

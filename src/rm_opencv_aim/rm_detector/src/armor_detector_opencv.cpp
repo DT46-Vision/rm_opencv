@@ -241,7 +241,7 @@ std::vector<Armor> ArmorDetector::is_armor(const std::vector<Light>& lights) {
         return armors_found;
     }
 
-    for (size_t i = 0; i < lights.size() - 2; i++) {
+    for (size_t i = 0; i <= lights.size() - 2; i++) {
         if (processed_indices.count(i)) continue;
         const Light& light = lights[i];
             if (lights[i + 1].color == light.color) {

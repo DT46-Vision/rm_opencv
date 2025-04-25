@@ -85,7 +85,7 @@ class RMSerialDriver(Node):
                     continue
 
                 # 如果头部存在且等于 0xA5
-                if header[0] == 0xa5:
+                if header[0] == 0xA5:
                     # 读取颜色信息字节
                     color_byte = self.serial_port.read(1)
                     if not color_byte or len(color_byte) != 1:

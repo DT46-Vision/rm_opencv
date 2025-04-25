@@ -75,7 +75,6 @@ void ArmorDetector::update_light_area_min(int new_light_area_min) {
 void ArmorDetector::update_light_angle_min(int new_light_angle_min) {
     light_params.light_angle_min = new_light_angle_min;
 }
-
 void ArmorDetector::update_light_angle_max(int new_light_angle_max) {
     light_params.light_angle_max = new_light_angle_max;
 }
@@ -94,10 +93,6 @@ void ArmorDetector::update_cy_tol(int new_cy_tol) {
 
 void ArmorDetector::update_height_rate_tol(float new_height_rate_tol) {
     light_params.height_rate_tol = new_height_rate_tol;
-}
-
-void ArmorDetector::update_light_angle_tol(int new_light_angle_tol) {
-    light_params.light_angle_tol = new_light_angle_tol;
 }
 
 void ArmorDetector::update_vertical_discretization(float new_vertical_discretization) {
@@ -197,12 +192,11 @@ std::pair<int, float> ArmorDetector::is_close(const Light& light1, const Light& 
     // 计算公共变量
     float height = std::max(light1.height, light2.height);
     float height_rate = height / std::min(light1.height, light2.height);
-    float distance = calculate_distance({light1.cx, light1.cy}, {light2.cx, light2.cy});
-
     // 如果高度比例不符合，直接返回
     if (height_rate >= light_params.height_rate_tol) {
         return std::make_pair(-1, -1.0f);
     }
+    float distance = calculate_distance({light1.cx, light1.cy}, {light2.cx, light2.cy});
 
     // 检查是否在同一水平线上
     if (std::abs(light1.cy - light2.cy) < light_params.cy_tol) {
@@ -215,27 +209,23 @@ std::pair<int, float> ArmorDetector::is_close(const Light& light1, const Light& 
             return std::make_pair(1, height);
         }
     } else {
-        // 非水平情况，检查角度和垂直性
-        float angle_diff = std::abs(light1.angle - light2.angle);
-        if (angle_diff <= light_params.light_angle_tol) {
-            float light1_angle = std::atan2(light1.up.y - light1.down.y, light1.up.x - light1.down.x) * 180.0 / M_PI;
-            float light2_angle = std::atan2(light2.up.y - light2.down.y, light2.up.x - light2.down.x) * 180.0 / M_PI;
-            float line_angle = std::atan2(light1.cy - light2.cy, light1.cx - light2.cx) * 180.0 / M_PI;
+        float light1_angle = std::atan2(light1.up.y - light1.down.y, light1.up.x - light1.down.x) * 180.0 / M_PI;
+        float light2_angle = std::atan2(light2.up.y - light2.down.y, light2.up.x - light2.down.x) * 180.0 / M_PI;
+        float line_angle = std::atan2(light1.cy - light2.cy, light1.cx - light2.cx) * 180.0 / M_PI;
 
-            float slope1 = angle_to_slope(light1_angle);
-            float slope2 = angle_to_slope(light2_angle);
-            float slope_line = angle_to_slope(line_angle);
+        float slope1 = angle_to_slope(light1_angle);
+        float slope2 = angle_to_slope(light2_angle);
+        float slope_line = angle_to_slope(line_angle);
 
-            // 检查垂直性
-            if (std::abs(slope1 * slope_line + 1) < light_params.vertical_discretization ||
-                std::abs(slope2 * slope_line + 1) < light_params.vertical_discretization) {
-                if (distance > height * light_params.height_multiplier_min &&
-                 distance < height * light_params.height_multiplier_max) {
-                    return std::make_pair(0, height);
-                } else if (distance > height * 1.56f * light_params.height_multiplier_min &&
-                 distance < height * 1.76f * light_params.height_multiplier_max) {
-                    return std::make_pair(1, height);
-                }
+        // 检查垂直性
+        if (std::abs(slope1 * slope_line + 1) < light_params.vertical_discretization ||
+            std::abs(slope2 * slope_line + 1) < light_params.vertical_discretization) {
+            if (distance > height * light_params.height_multiplier_min &&
+                distance < height * light_params.height_multiplier_max) {
+                return std::make_pair(0, height);
+            } else if (distance > height * 1.56f * light_params.height_multiplier_min &&
+                distance < height * 1.76f * light_params.height_multiplier_max) {
+                return std::make_pair(1, height);
             }
         }
     }
@@ -246,25 +236,26 @@ std::pair<int, float> ArmorDetector::is_close(const Light& light1, const Light& 
 std::vector<Armor> ArmorDetector::is_armor(const std::vector<Light>& lights) {
     std::vector<Armor> armors_found;
     std::set<int> processed_indices;
+    
+    if (lights.size() < 2) {
+        return armors_found;
+    }
 
-    for (size_t i = 0; i < lights.size(); ++i) {
+    for (size_t i = 0; i <= lights.size() - 2; i++) {
         if (processed_indices.count(i)) continue;
-
         const Light& light = lights[i];
-        for (size_t j = 0; j < lights.size(); ++j) {
-            if (j != i && !processed_indices.count(j) && lights[j].color == light.color) {
+            if (lights[i + 1].color == light.color) {
                 int type;
                 float height;
-                std::tie(type, height) = is_close(light, lights[j]);
+                std::tie(type, height) = is_close(light, lights[i + 1]);
 
                 if (type >= 0) {
-                    armors_found.push_back(Armor(light, lights[j], height, type));
+                    armors_found.push_back(Armor(light, lights[i + 1], height, type));
                     processed_indices.insert(i);
-                    processed_indices.insert(j);
+                    processed_indices.insert(i + 1);
                 }
             }
         }
-    }
 
     armors = armors_found;
     return armors;

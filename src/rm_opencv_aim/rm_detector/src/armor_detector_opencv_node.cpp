@@ -29,7 +29,7 @@ public:
         // 模式参数字典
         int detect_color = 2;  // 颜色参数
         int display_mode = 0;  // 显示模式
-        int binary_val = 20;
+        int binary_val = 70;
 
         // 创建 ArmorDetector 对象并初始化
         detector_ = std::make_shared<ArmorDetector>(detect_color, display_mode, binary_val, light_params);
@@ -46,7 +46,7 @@ public:
         this->declare_parameter<float>("vertical_discretization", 1.5);
         this->declare_parameter<float>("height_multiplier_min", 1.8);
         this->declare_parameter<float>("height_multiplier_max", 2.6);
-        this->declare_parameter<int>("binary_val", 20);
+        this->declare_parameter<int>("binary_val", 70);
         this->declare_parameter<int>("detect_color", 2);
         this->declare_parameter<int>("display_mode", 0);
 

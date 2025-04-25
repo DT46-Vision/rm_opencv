@@ -14,10 +14,10 @@ from cv_bridge import CvBridge
 # 摄像头参数
 camera_params = {
     'camera_id': 0,
-    'image_width': 1920,
-    'image_height': 1080,
+    'image_width': 640,
+    'image_height': 480,
     'auto_exposure': 1,
-    'exposure_time': 100,
+    'exposure_time': 20,
     'fps': 120,
     'gain': 100,
 }

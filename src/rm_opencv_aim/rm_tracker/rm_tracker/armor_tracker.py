@@ -1,6 +1,4 @@
 import math
-from loguru import logger
-
 # 定义常量, 弧度转角度
 RAD2DEG = 180 / math.pi
 DEG2RAD = math.pi / 180

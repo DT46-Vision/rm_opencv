@@ -42,7 +42,7 @@ class ArmorTrackerNode(Node):
 
         self.pub_tracker = self.create_publisher(ArmorTracking, '/tracker/target', 10) # 创建发布者/tracker/target
 
-        self.tracking_color = 1     # 1蓝色表示, 0表示红色, 现初始化为蓝色
+        self.tracking_color = 0     # 1蓝色表示, 0表示红色, 现初始化为蓝色
         self.follow_decision = 0
         self.tracking_armor = []    # 初始化追踪装甲板为列表
 

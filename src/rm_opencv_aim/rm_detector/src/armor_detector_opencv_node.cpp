@@ -135,8 +135,6 @@ private:
                 detector_->update_cy_tol(param.as_int());
             } else if (param.get_name() == "height_rate_tol") {
                 detector_->update_height_rate_tol(param.as_double());
-            } else if (param.get_name() == "light_angle_tol") {
-                detector_->update_light_angle_tol(param.as_int());
             } else if (param.get_name() == "vertical_discretization") {
                 detector_->update_vertical_discretization(param.as_double());
             } else if (param.get_name() == "height_multiplier_min") {

@@ -13,12 +13,12 @@ from cv_bridge import CvBridge
 
 # 摄像头参数
 camera_params = {
-    'camera_id': 0,
+    'camera_id': 1,
     'image_width': 640,
     'image_height': 480,
     'auto_exposure': 1,
     'exposure_time': 20,
-    'fps': 120,
+    'fps': 30,
     'gain': 100,
 }
 
@@ -49,10 +49,10 @@ class USBCameraNode(Node):
         self.waiting_for_parameters = False
 
         # 获取相机参数
-        self.fps = camera_params.get('fps', 60)
+        self.fps = camera_params.get('fps', 30)
         self.camera_id = camera_params.get('camera_id', 0)
-        self.image_width = camera_params.get('image_width', 1280)
-        self.image_height = camera_params.get('image_height', 720)
+        self.image_width = camera_params.get('image_width', 640)
+        self.image_height = camera_params.get('image_height', 480)
         self.auto_exposure = camera_params.get('auto_exposure', 1)
         self.exposure_time = camera_params.get('exposure_time', 100)
         self.gain = camera_params.get('gain', 0)
